@@ -23,9 +23,10 @@ Open Command Prompt and install the necessary libraries using pip:
 pip install Pillow pytesseract pyperclip
 ```
 
-### Step 4: Create the Python Script
-Create a Python file named `clipboard_ocr.py` using a text editor like Notepad or a code editor like Visual Studio Code. Enter the following Python code:
+### Step 4: Run the Python Script
+Once you have cloned or downloaded the repository, you can run the `image_to_text.py` script whenever you have an image copied to your clipboard that contains text you want to extract.
 
+The script will automatically extract the text from the clipboard image and copy the extracted text back to the clipboard, ready for you to paste anywhere you need.
 ```python
 # This script extracts text from images in the clipboard using Tesseract OCR and copies the extracted text back to the clipboard.
 # Specifically designed to run on Windows.
