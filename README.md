@@ -30,24 +30,35 @@ Create a Python file named `clipboard_ocr.py` using a text editor like Notepad o
 # This script extracts text from images in the clipboard using Tesseract OCR and copies the extracted text back to the clipboard.
 # Specifically designed to run on Windows.
 
-import os
 import pytesseract
 from PIL import ImageGrab, Image
 import pyperclip
+import tempfile
+import os
 
-# Path to the Tesseract executable
+# Configure the path to the Tesseract executable
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-
 def image_to_text_clipboard():
     try:
-        # Attempt to grab an image from the clipboard
+        # Grab the image from the clipboard
         img = ImageGrab.grabclipboard()
         if isinstance(img, Image.Image):
-            # Use Tesseract to perform OCR on the grabbed image
-            text = pytesseract.image_to_string(img)
-            # Copy the extracted text back to the clipboard
-            pyperclip.copy(text)
-            print("Text copied to clipboard.")
+            # Save the image to a temporary file
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as tmp:
+                img.save(tmp.name)
+                # Ensure the file is closed before reading it again
+                tmp.close()
+            
+            # Read the image back from the temporary file
+            with Image.open(tmp.name) as img:
+                # Use Tesseract to extract text from the image
+                text = pytesseract.image_to_string(img)
+                # Copy the extracted text back to the clipboard
+                pyperclip.copy(text)
+                print("Text copied to clipboard.")
+            
+            # Delete the temporary file after ensuring it's no longer in use
+            os.unlink(tmp.name)
         else:
             print("No image found on the clipboard.")
     except Exception as e:
